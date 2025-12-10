@@ -1,4 +1,4 @@
-# bb84.py
+
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 from helpers import *

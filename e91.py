@@ -1,4 +1,4 @@
-# e91.py (CORRECTED VERSION)
+
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
@@ -6,8 +6,7 @@ from helpers import get_noise_model
 
 def run_e91_simulation(num_trials, noise_level, has_eve):
     """
-    Runs E91 simulation serially.
-    Corrected for Maximal CHSH Violation (S ~ 2.82).
+    Runs E91 simulation serially
     """
     
     noise_model = get_noise_model(noise_level)
@@ -16,14 +15,14 @@ def run_e91_simulation(num_trials, noise_level, has_eve):
     # --- CORRECTED ANGLES FOR S = 2.82 ---
     # Alice: 0 (Z-basis), pi/2 (X-basis)
     # Bob:   pi/4 (Diagonal), 3*pi/4 (Orthogonal Diagonal)
-    # This specific set ensures E(a,b') is negative, maximizing the formula:
+    # maximizing the formula:
     # S = E(a,b) - E(a,b') + E(a',b) + E(a',b')
     
     combinations = [
-        (0, np.pi/4),          # E1: Alice Z, Bob D+
-        (0, 3*np.pi/4),        # E2: Alice Z, Bob D-  (Expected Correlation: -0.707)
-        (np.pi/2, np.pi/4),    # E3: Alice X, Bob D+
-        (np.pi/2, 3*np.pi/4)   # E4: Alice X, Bob D-
+        (0, np.pi/4),
+        (0, 3*np.pi/4),
+        (np.pi/2, np.pi/4),
+        (np.pi/2, 3*np.pi/4)
     ]
     
     correlations = []
@@ -32,26 +31,23 @@ def run_e91_simulation(num_trials, noise_level, has_eve):
         N_same = 0
         N_diff = 0
         
-        # Run the trials for this specific angle setting
         for _ in range(num_trials):
             qc = QuantumCircuit(2, 2)
             qc.h(0)
-            qc.cx(0, 1) # Create Entanglement
+            qc.cx(0, 1)
             
             if has_eve:
-                # Eve measures, destroying entanglement
-                qc.measure([0,1], [0,1]) 
+                qc.measure([0,1], [0,1])
             
-            # Rotations (Measurement Basis Selection)
-            qc.ry(theta_a, 0) 
-            qc.ry(theta_b, 1) 
+            qc.ry(theta_a, 0)
+            qc.ry(theta_b, 1)
             
             qc.measure([0, 1], [0, 1])
             
             job = backend.run(transpile(qc, backend), shots=1, memory=True)
             result = job.result().get_memory()[0]
             
-            if result[0] == result[1]: # Qiskit string is "Q1Q0"
+            if result[0] == result[1]:
                 N_same += 1
             else:
                 N_diff += 1
@@ -63,13 +59,6 @@ def run_e91_simulation(num_trials, noise_level, has_eve):
         correlations.append(E)
 
     # --- STANDARD CHSH FORMULA ---
-    # With the angles above:
-    # E1 ~ 0.707
-    # E2 ~ -0.707
-    # E3 ~ 0.707
-    # E4 ~ 0.707
-    # S = 0.7 - (-0.7) + 0.7 + 0.7 = 2.82
-    
     S = correlations[0] - correlations[1] + correlations[2] + correlations[3]
     
     return {

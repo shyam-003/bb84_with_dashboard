@@ -4,12 +4,12 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import threading
 
-# Import BOTH protocols
+
 try:
     from bb84 import run_bb84_simulation
     from e91 import run_e91_simulation
 except ImportError as e:
-    print(f"CRITICAL ERROR: {e}. Make sure bb84.py and e91.py are in the folder.")
+    print(f"CRITICAL ERROR: {e}.")
 
 class QKDApp:
     def __init__(self, root):
@@ -31,6 +31,7 @@ class QKDApp:
 
         self._init_controls()
         self._init_visuals()
+
 
     def _init_controls(self):
         lbl_title = ttk.Label(self.control_frame, text="Control Panel", font=("Helvetica", 16, "bold"))
@@ -86,6 +87,7 @@ class QKDApp:
         self.lbl_secure = ttk.Label(self.control_frame, text="Waiting...", foreground="gray")
         self.lbl_secure.pack(anchor="w")
 
+
     def _init_visuals(self):
         self.tabs = ttk.Notebook(self.visual_frame)
         self.tabs.pack(fill=tk.BOTH, expand=True)
@@ -104,6 +106,7 @@ class QKDApp:
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
         self._reset_graphs()
 
+
     def _reset_graphs(self, event=None):
         self.history_x = []
         self.history_y = []
@@ -120,11 +123,12 @@ class QKDApp:
             self.ax.set_title("E91: CHSH S-Value")
             self.ax.set_ylabel("Bell Parameter S")
             self.ax.axhline(y=2.0, color='r', linestyle='--', label='Classical Limit (2.0)')
-            self.ax.set_ylim(1.0, 3.0) # S max is 2.82
+            self.ax.set_ylim(1.0, 3.0)
             
         self.ax.legend()
         self.ax.grid(True, alpha=0.5)
         self.canvas.draw()
+
 
     def run_simulation_thread(self):
         self.btn_run.config(state="disabled")
@@ -132,6 +136,7 @@ class QKDApp:
         self.progress.start()
         thread = threading.Thread(target=self.run_logic)
         thread.start()
+
 
     def run_logic(self):
         protocol = self.protocol_var.get()
@@ -154,6 +159,7 @@ class QKDApp:
             results = run_e91_simulation(num_trials, noise_level, has_eve)
             self.root.after(0, lambda: self.update_gui_e91(results))
 
+
     def update_gui_bb84(self, results):
         qber = results['qber']
         is_secure = qber < 0.11
@@ -167,6 +173,7 @@ class QKDApp:
         
         self._update_graph(qber)
         self._finish_run()
+
 
     def update_gui_e91(self, results):
         s_value = results['s_value']
@@ -185,11 +192,13 @@ class QKDApp:
         self._update_graph(s_value)
         self._finish_run()
 
+
     def _update_status(self, is_secure):
         if is_secure:
             self.lbl_secure.config(text="Status: SECURE", foreground="green")
         else:
             self.lbl_secure.config(text="Status: INSECURE", foreground="red")
+
 
     def _update_graph(self, y_value):
         self.trial_counter += 1
@@ -197,6 +206,7 @@ class QKDApp:
         self.history_y.append(y_value)
         self.ax.plot(self.history_x, self.history_y, marker='o', linestyle='-', color='b')
         self.canvas.draw()
+
 
     def _finish_run(self):
         self.progress.stop()

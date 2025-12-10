@@ -1,4 +1,4 @@
-# helpers.py
+
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
@@ -74,7 +74,7 @@ def measure_bob(circuit, bases):
 
 def get_noise_model(error_rate):
     """
-    Creates a noise model for the simulator.
+    Creates a noise model for the simulator
     error_rate: 0.0 to 1.0 (0% to 100%)
     """
     noise_model = NoiseModel()
