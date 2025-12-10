@@ -7,19 +7,15 @@ from constants import *
 
 def get_quantum_random_numbers(length):
     """
-    Generates true random bits using a quantum circuit (Hadamard + Measure)
+    Generates true random bits using a quantum circuit
     """
-    qc = QuantumCircuit(length, length)
-    qc.h(range(length))
-    qc.measure(range(length), range(length))
+    qc = QuantumCircuit(1, 1)
+    qc.h(0)
+    qc.measure(0, 0)
     
     backend = AerSimulator()
-    job = backend.run(transpile(qc, backend), shots=1)
-    result = job.result().get_counts()
-    
-    
-    bit_string = list(result.keys())[0]
-    return [bit for bit in bit_string]
+    job = backend.run(transpile(qc, backend), shots=length, memory=True)
+    return job.result().get_memory()
 
 
 def get_random_bases(length):
@@ -87,3 +83,4 @@ def get_noise_model(error_rate):
         error = depolarizing_error(error_rate, 1)
         noise_model.add_all_qubit_quantum_error(error, ['x', 'h', 'id'])
     return noise_model
+
