@@ -2,7 +2,7 @@
 
 A sophisticated interactive simulator for Quantum Key Distribution protocols (**BB84** and **E91**). This tool demonstrates how the laws of quantum mechanics—specifically the *Heisenberg Uncertainty Principle* and *Quantum Entanglement*—guarantee secure communication.
 
-**Repository:** https://github.com/shyam-003/bb84_with_dashboard
+**Repository:** https://github.com/shyam-003/QKD_with_dashboard.git
 
 <br>
 
@@ -26,7 +26,7 @@ A sophisticated interactive simulator for Quantum Key Distribution protocols (**
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/shyam-003/bb84_with_dashboard.git
+git clone https://github.com/shyam-003/QKD_with_dashboard.git
 cd bb84_with_dashboard
 ```
 
