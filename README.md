@@ -65,6 +65,13 @@ python main.py
 
  4. **Noise Level:** Adjust the slider (0-50%) to simulate imperfect hardware.
 
+<br>
+
+<p align="center">
+  <img src="dashboard_bb84.png" width="400">
+  <img src="dashboard_e91.png" width="400">
+</p>
+
 
 <br>
 
